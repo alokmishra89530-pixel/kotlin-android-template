@@ -1,26 +1,18 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("com.android.application")
-    kotlin("android")
+    id("org.jetbrains.kotlin.android")
 }
 
-val APP_VERSION_NAME : String by project
-val APP_VERSION_CODE : String by project
-val APP_ID : String by project
-
 android {
-    compileSdk = libs.versions.compile.sdk.version.get().toInt()
+    namespace = "com.vashai.maxassistant"
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = libs.versions.min.sdk.version.get().toInt()
-        namespace = APP_ID
-
-        applicationId = APP_ID
-        versionCode = APP_VERSION_CODE.toInt()
-        versionName = APP_VERSION_NAME
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        applicationId = "com.vashai.maxassistant"
+        minSdk = 26
+        targetSdk = 35
+        versionCode = 2026
+        versionName = "4.0-MAX-ULTIMATE"
     }
     buildFeatures {
         viewBinding = true
@@ -29,55 +21,28 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-
-    lint {
-        warningsAsErrors = true
-        abortOnError = true
-        disable.add("GradleDependency")
-    }
-
-    // Use this block to configure different flavors
-//    flavorDimensions("version")
-//    productFlavors {
-//        create("full") {
-//            dimension = "version"
-//            applicationIdSuffix = ".full"
-//        }
-//        create("demo") {
-//            dimension = "version"
-//            applicationIdSuffix = ".demo"
-//        }
-//    }
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
 dependencies {
-    implementation(projects.libraryAndroid)
-    implementation(projects.libraryCompose)
-    implementation(projects.libraryKotlin)
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
 
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraint.layout)
-    implementation(libs.androidx.core.ktx)
+    val cameraxVersion = "1.4.0"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
 
-    testImplementation(libs.junit)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.jsoup:jsoup:1.18.1")
 
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.espresso.core)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
 }
