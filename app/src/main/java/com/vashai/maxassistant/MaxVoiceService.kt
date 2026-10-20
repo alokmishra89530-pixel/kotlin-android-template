@@ -1,3 +1,4 @@
+// File: app/src/main/java/com/vashai/maxassistant/MaxVoiceService.kt
 package com.vashai.maxassistant
 
 import android.app.Notification
@@ -30,7 +31,7 @@ class MaxVoiceService : Service(), TextToSpeech.OnInitListener {
     private val serviceScope = CoroutineScope(Dispatchers.Main)
     private val httpClient = OkHttpClient()
 
-    // यहाँ अपनी Groq API Key डालें (groq.com से फ्री में ले सकते हैं)
+    // आपकी Groq API Key यहाँ है
     private val groqApiKey = "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"
 
     private var isVoiceUnlocked = true
@@ -101,7 +102,6 @@ class MaxVoiceService : Service(), TextToSpeech.OnInitListener {
 
         serviceScope.launch(Dispatchers.IO) {
             try {
-                // Groq API Request (Llama 3 Model)
                 val jsonBody = JSONObject().apply {
                     put("model", "llama3-70b-8192")
                     put("messages", JSONArray().put(
@@ -127,7 +127,6 @@ class MaxVoiceService : Service(), TextToSpeech.OnInitListener {
                             .getJSONObject("message")
                             .getString("content")
 
-                        // Simple keyword matching for actions or direct speech response
                         handleCommandActions(userPrompt, aiReply)
                     }
                 }
@@ -190,4 +189,3 @@ class MaxVoiceService : Service(), TextToSpeech.OnInitListener {
 
     override fun onBind(intent: Intent?): IBinder? = null
 }
-
