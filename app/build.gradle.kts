@@ -49,7 +49,6 @@ dependencies {
 
     // OkHttp & JSON for Network & Groq/APIs
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.json:json:20231018")
 
     // Google Generative AI SDK (Gemini)
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
