@@ -1,43 +1,49 @@
-package com.ncorti.kotlin.template.app
+package com.vashai.maxassistant
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.provider.Settings
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.ncorti.kotlin.template.app.databinding.ActivityMainBinding
-import com.ncorti.kotlin.template.library.FactorialCalculator
-import com.ncorti.kotlin.template.library.android.ToastUtil
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 100, 50, 50)
+        }
 
-        binding.buttonCompute.setOnClickListener {
-            val message = if (binding.editTextFactorial.text.isNotEmpty()) {
-                val input = binding.editTextFactorial.text.toString().toLong()
-                val result = try {
-                    FactorialCalculator.computeFactorial(input).toString()
-                } catch (ex: IllegalStateException) {
-                    "Error: ${ex.message}"
-                }
+        val statusText = TextView(this).apply {
+            text = "MAX AI Assistant is Ready"
+            textSize = 20f
+        }
 
-                binding.textResult.text = result
-                binding.textResult.visibility = View.VISIBLE
-                getString(R.string.notification_title, result)
-            } else {
-                getString(R.string.please_enter_a_number)
+        val startBtn = Button(this).apply {
+            text = "Start MAX AI Service ('Bolo Max')"
+            setOnClickListener {
+                val serviceIntent = Intent(this@MainActivity, MaxVoiceService::class.java)
+                startForegroundService(serviceIntent)
+                statusText.text = "MAX AI Service Started!"
             }
-            ToastUtil.showToast(this, message)
         }
 
-        binding.buttonAppcompose.setOnClickListener {
-            val intent = Intent(it.context, ComposeActivity::class.java)
-            startActivity(intent)
+        val accessibilityBtn = Button(this).apply {
+            text = "Open Accessibility Settings"
+            setOnClickListener {
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
+            }
         }
+
+        layout.addView(statusText)
+        layout.addView(startBtn)
+        layout.addView(accessibilityBtn)
+
+        setContentView(layout)
     }
 }
